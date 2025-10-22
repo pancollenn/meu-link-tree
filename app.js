@@ -1,46 +1,48 @@
 // app.js
 
-// 1. DADOS (O "Back-end Falso")
-// Uma lista (array) de objetos. Cada objeto é um link.
-const meusLinks = [
-    {
-        titulo: "Meu Portfólio",
-        url: "httpss://seu-portfolio.com"
-    },
-    {
-        titulo: "Meu GitHub",
-        url: "httpss://github.com/seu-usuario"
-    },
-    {
-        titulo: "Meu LinkedIn",
-        url: "httpss://linkedin.com/in/seu-usuario"
-    }
-];
-
-// 2. ACHAR O ELEMENTO HTML (O "Alvo")
-// Usamos o 'document.querySelector' para selecionar o elemento pelo seu ID
+// 1. ACHAR O ELEMENTO HTML (O "Alvo")
 const listaDeLinksElemento = document.querySelector('#lista-de-links');
 
-// 3. A LÓGICA (O "Manipulador do DOM")
-// Vamos usar um loop (forEach) para passar por cada item da nossa lista 'meusLinks'
-meusLinks.forEach( (link) => {
+// 2. OS DADOS (A "API")
+const usuarioGitHub = 'pancollenn'; 
+const urlApiGitHub = `https://api.github.com/users/${usuarioGitHub}/repos?sort=created&direction=desc`;
+
+// 3. A LÓGICA (A "Função Assíncrona")
+
+// Marcamos a função com 'async' para poder usar 'await' dentro dela
+async function buscarRepositorios() {
     
-    // Para cada item, vamos criar os elementos HTML
-    
-    // a. Cria um item de lista <li>
-    const itemDaLista = document.createElement('li');
-    
-    // b. Cria um link <a>
-    const linkElemento = document.createElement('a');
-    
-    // c. Define os atributos do link
-    linkElemento.href = link.url;         // O destino (ex: https://github.com...)
-    linkElemento.textContent = link.titulo; // O texto (ex: "Meu GitHub")
-    linkElemento.target = "_blank";       // Opcional: abre em nova aba
-    
-    // d. Monta a estrutura: Coloca o <a> DENTRO do <li>
-    itemDaLista.appendChild(linkElemento);
-    
-    // e. Adiciona o <li> (já com o link dentro) na <ul> do HTML
-    listaDeLinksElemento.appendChild(itemDaLista);
-});
+    // O 'try...catch' é para capturar erros (ex: API offline, usuário não existe)
+    try {
+        // a. AWAIT: "Espere" o fetch (busca) terminar e nos dar uma resposta
+        const resposta = await fetch(urlApiGitHub);
+        
+        // b. AWAIT: "Espere" a resposta ser transformada em JSON (um formato que o JS entende)
+        const repositorios = await resposta.json();
+        
+        // c. Pega apenas os 5 repositórios mais recentes
+        const repositoriosRecentes = repositorios.slice(0, 3);
+
+        // d. O loop para renderizar (igual ao que fizemos antes)
+        repositoriosRecentes.forEach( (repo) => {
+            const itemDaLista = document.createElement('li');
+            const linkElemento = document.createElement('a');
+            
+            linkElemento.href = repo.html_url;    // Link para o repositório
+            linkElemento.textContent = repo.name; // Nome do repositório
+            linkElemento.target = "_blank";
+            
+            itemDaLista.appendChild(linkElemento);
+            listaDeLinksElemento.appendChild(itemDaLista);
+        });
+
+    } catch (erro) {
+        // Se algo der errado (ex: internet caiu, API falhou)
+        console.error("Erro ao buscar repositórios:", erro);
+        listaDeLinksElemento.textContent = "Não foi possível carregar os projetos.";
+    }
+}
+
+// 4. CHAMAR A FUNÇÃO
+// Inicia todo o processo
+buscarRepositorios();
