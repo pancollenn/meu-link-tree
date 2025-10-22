@@ -1,0 +1,84 @@
+/* Reset básico */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+
+    /* MÁGICA DO FLEXBOX: 
+       Isso vai centralizar todo o conteúdo da página */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Ocupa a altura inteira da tela */
+}
+
+/* Estilizando o Cabeçalho (Perfil) */
+header {
+    /* Usando Flexbox de novo para alinhar itens internos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%; /* Deixa a imagem redonda */
+    border: 4px solid #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0.5rem 0 0.25rem;
+}
+
+header p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Estilizando a Lista de Links */
+main {
+    width: 100%;
+    max-width: 600px; /* Limita a largura dos links */
+}
+
+main ul {
+    list-style: none; /* Remove as bolinhas da lista */
+    padding: 0;
+    margin: 0;
+}
+
+main li {
+    margin-bottom: 1rem;
+}
+
+main a {
+    display: block; /* Faz o link ocupar a linha toda */
+    background-color: #fff;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    /* Efeito suave ao passar o mouse */
+    transition: transform 0.2s ease-in-out; 
+}
+
+main a:hover {
+    transform: scale(1.03); /* Aumenta um pouquinho */
+    background-color: #f8f9fa;
+}
+
+footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #888;
+}
