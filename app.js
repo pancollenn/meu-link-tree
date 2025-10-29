@@ -1,48 +1,38 @@
-// app.js
+// app.js (na pasta raiz)
 
-// 1. ACHAR O ELEMENTO HTML (O "Alvo")
 const listaDeLinksElemento = document.querySelector('#lista-de-links');
 
-// 2. OS DADOS (A "API")
-const usuarioGitHub = 'pancollenn'; 
-const urlApiGitHub = `https://api.github.com/users/${usuarioGitHub}/repos?sort=created&direction=desc`;
+// --- MUDANÇA AQUI ---
+// Apague as variáveis do GitHub e adicione esta:
+const urlApiLocal = 'http://localhost:3000/api/links';
 
-// 3. A LÓGICA (A "Função Assíncrona")
-
-// Marcamos a função com 'async' para poder usar 'await' dentro dela
-async function buscarRepositorios() {
-    
-    // O 'try...catch' é para capturar erros (ex: API offline, usuário não existe)
+async function buscarLinks() {
     try {
-        // a. AWAIT: "Espere" o fetch (busca) terminar e nos dar uma resposta
-        const resposta = await fetch(urlApiGitHub);
-        
-        // b. AWAIT: "Espere" a resposta ser transformada em JSON (um formato que o JS entende)
-        const repositorios = await resposta.json();
-        
-        // c. Pega apenas os 5 repositórios mais recentes
-        const repositoriosRecentes = repositorios.slice(0, 3);
+        // 1. MUDANÇA AQUI: Busca na nossa API local
+        const resposta = await fetch(urlApiLocal);
 
-        // d. O loop para renderizar (igual ao que fizemos antes)
-        repositoriosRecentes.forEach( (repo) => {
+        // 2. MUDANÇA AQUI: Renomeia a variável
+        const links = await resposta.json();
+
+        // 3. O loop (ajustado para os nossos dados)
+        links.forEach( (link) => {
             const itemDaLista = document.createElement('li');
             const linkElemento = document.createElement('a');
-            
-            linkElemento.href = repo.html_url;    // Link para o repositório
-            linkElemento.textContent = repo.name; // Nome do repositório
+
+            // 4. MUDANÇA AQUI: Usa 'link.url' e 'link.titulo'
+            linkElemento.href = link.url;
+            linkElemento.textContent = link.titulo;
             linkElemento.target = "_blank";
-            
+
             itemDaLista.appendChild(linkElemento);
             listaDeLinksElemento.appendChild(itemDaLista);
         });
 
     } catch (erro) {
-        // Se algo der errado (ex: internet caiu, API falhou)
-        console.error("Erro ao buscar repositórios:", erro);
-        listaDeLinksElemento.textContent = "Não foi possível carregar os projetos.";
+        console.error("Erro ao buscar links:", erro);
+        listaDeLinksElemento.textContent = "Não foi possível carregar os links.";
     }
 }
 
-// 4. CHAMAR A FUNÇÃO
-// Inicia todo o processo
-buscarRepositorios();
+// 5. MUDANÇA AQUI: Renomeia a chamada da função
+buscarLinks();
